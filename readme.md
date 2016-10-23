@@ -6,12 +6,8 @@ Just a simple interface that returns real time updates from 0-360 degrees.
 This library also takes in consideration the magnetic field declination if your app has access to the users location. It tries to get the last known location and calculate the magnetic field declination with the coordinates.
 
 ### Usage
-        // initialize NorthWest with a context
-        northWest = new NorthWest(this);
-        
-        // start listening for updates
-        northWest
-                .getObservable()
+        // Get northwest instance and start listening for updates
+        subscription = NorthWest.getDegrees(context)
                 .subscribe(new Subscriber<Double>() {
                     @Override
                     public void onCompleted() {
@@ -29,8 +25,8 @@ This library also takes in consideration the magnetic field declination if your 
                     }
                 });
                 
-          // dispose when activity onStop is called
-          northWest.dispose();
+          // unsubscribe when no longer needed
+          subscription.unsubscribe();
 
 ### Import library
 Step 1. Add the JitPack repository to your build file

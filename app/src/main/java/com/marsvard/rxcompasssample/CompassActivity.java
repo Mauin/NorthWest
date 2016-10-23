@@ -7,11 +7,13 @@ import android.widget.TextView;
 import com.marsvard.northwest.NorthWest;
 
 import rx.Subscriber;
+import rx.Subscription;
+import rx.subscriptions.Subscriptions;
 
 public class CompassActivity extends AppCompatActivity {
 
     TextView degreesTextView;
-    private NorthWest northWest;
+    private Subscription degreesSubscription = Subscriptions.empty();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,9 +22,7 @@ public class CompassActivity extends AppCompatActivity {
 
         degreesTextView = (TextView) findViewById(R.id.degrees);
 
-        northWest = new NorthWest(this);
-        northWest
-                .getObservable()
+        degreesSubscription = NorthWest.getDegrees(this)
                 .subscribe(new Subscriber<Double>() {
                     @Override
                     public void onCompleted() {
@@ -41,8 +41,9 @@ public class CompassActivity extends AppCompatActivity {
                 });
     }
 
-
-
-
-
+    @Override
+    protected void onDestroy() {
+        degreesSubscription.unsubscribe();
+        super.onDestroy();
+    }
 }
